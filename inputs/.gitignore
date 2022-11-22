@@ -1,0 +1,6 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+
+# Put puzzle input files here named day01.txt to day25.txt

@@ -1,0 +1,3 @@
+# Advent of Code 2022
+
+To use this, place your puzzle inputs under the `inputs` directory named `day01.txt` to `day25.txt`. To solve the puzzles, simply execute the `aoc.py` file and it will sequentially solve each day that has a solution given. To test the sample inputs you can run `pytest` on this project directory to execute all of the tests under the `tests` directory. Helper functions are under the `utils` directory, the solutions are under the `solutions` directory. If you want to only execute a single day you can pass in the `--day` flag with the day you want to run and optionally use the `--override` flag to use a different file for overriding the puzzle input for that day.
