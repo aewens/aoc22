@@ -26,7 +26,7 @@ def get_puzzle(day, nostrip=False, nolines=False):
 
     newlines = list()
     for line in lines:
-        newlines.append(line.strip())
+        newlines.append(line if nostrip else line.strip())
 
     return newlines
 
