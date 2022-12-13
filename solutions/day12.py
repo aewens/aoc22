@@ -96,9 +96,6 @@ def p1(puzzle_input):
     return dijkstra(routes, start, end)
 
 def p2(puzzle_input):
-    # NOTE - SLOW, but works
-    return None
-
     width = len(puzzle_input[0])
     height = len(puzzle_input)
     hmap, _, end, starts = parse(puzzle_input)
