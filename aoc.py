@@ -8,6 +8,7 @@ from sys import exit
 
 parser = ArgumentParser()
 parser.add_argument("-d", "--day", dest="day")
+parser.add_argument("-s", "--skip", dest="skip", action="append")
 parser.add_argument("-o", "--override", dest="override", type=FileType("r"))
 
 def maybe_int(value):
@@ -46,7 +47,11 @@ def main():
         exit(0)
 
     #for index, solution in get_solutions().items():
+    skips = [maybe_int(s) for s in args.skip]
     for index in range(len(solutions)):
+        if index in skips:
+            continue
+
         solution = solutions.get(index)
         if solution is None:
             continue
