@@ -38,7 +38,7 @@ def main():
         day = f"Day {index:02}"
         puzzle = get_puzzle(index)
         if args.override is not None:
-            puzzle = args.override.read().split("\n")
+            puzzle = args.override.read().strip().split("\n")
 
         solution = solutions[index]
         handle_result(day, solution(puzzle))
