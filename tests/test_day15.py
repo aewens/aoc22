@@ -26,6 +26,6 @@ def test_d15():
     s1 = p1(puzzle, 10)
     assert s1 == 26, f"p1 is wrong: {s1}"
 
-    #p2 = script("p2")
-    #s2 = p2(puzzle)
-    #assert s2 == 93, f"p2 is wrong: {s2}"
+    p2 = script("p2")
+    s2 = p2(puzzle, 20)
+    assert s2 == 56000011, f"p2 is wrong: {s2}"
