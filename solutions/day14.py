@@ -1,3 +1,4 @@
+from utils import slow
 from pprint import pprint
 #from time import sleep
 
@@ -92,10 +93,10 @@ def p1(puzzle_input):
     return len(sand)
 
 def p2(puzzle_input):
-    # NOTE - SLOW, but works
     source = 500, 0
     sand = pour(source, *build(puzzle_input), p2=True)
     return len(sand)
 
+@slow
 def solve(puzzle_input):
     return p1(puzzle_input), p2(puzzle_input)

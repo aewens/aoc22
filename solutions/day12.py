@@ -1,3 +1,4 @@
+from utils import slow
 from pprint import pprint
 from heapq import heappop, heappush
 
@@ -109,5 +110,6 @@ def p2(puzzle_input):
 
     return winner
 
+@slow
 def solve(puzzle_input):
     return p1(puzzle_input), p2(puzzle_input)

@@ -1,12 +1,22 @@
 from pathlib import Path
 from importlib import import_module
 from collections import defaultdict
+from functools import wraps
 
 def noop(*args, **kwargs):
     pass
 
 def reformat(block):
     return block[1:-1].split("\n")
+
+def slow(func):
+    func.slow = True
+
+    @wraps(func)
+    def _slow(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    return _slow
 
 def get_puzzle(day, nostrip=False, nolines=False):
     target = Path.cwd() / "inputs" / f"day{day:02}.txt"
