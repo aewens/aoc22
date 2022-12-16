@@ -144,7 +144,7 @@ def coverage(y, sensors, beacons, distances):
 
     return total
 
-def coverage2(cap, sensors, beacons, distances):
+def frequency(cap, sensors, beacons, distances):
     for y in range(cap, 0, -1):
         if cap > 20 and y % 100000 == 0:
             print(f"{100*(1-y/cap):.02f}%")
@@ -219,12 +219,44 @@ def coverage2(cap, sensors, beacons, distances):
                     x = span.max + 1
                     return x * 4000000 + y
 
+def border(x, y, distance):
+    for dx in range(distance + 2):
+        dy = distance + 1 - dx
+        yield x - dx, y - dy
+        yield x - dx, y + dy
+        yield x + dx, y - dy
+        yield x + dx, y + dy
+
+def freq(cap, distances):
+    for (sx, sy), distance in distances.items():
+        for x, y in border(sx, sy, distance):
+            if x < 0 or x > cap:
+                continue
+
+            if y < 0 or y > cap:
+                continue
+
+            skip = False
+            for (ox, oy), dist in distances.items():
+                if abs(x-ox) + abs(y-oy) > dist:
+                    continue
+
+                skip = True
+                break
+
+            if not skip:
+                return x * 4000000 + y
+
 def p1(puzzle_input, y=2000000):
     return coverage(y, *build(puzzle_input))
 
 def p2(puzzle_input, cap=4000000):
-    # SSSLLLOOOWWW, but works
-    return coverage2(cap, *build(puzzle_input))
+    # NOTE - SSSLLLOOOWWW, but works
+    # NOTE - Original solution
+    #return frequency(cap, *build(puzzle_input))
+
+    # NOTE - Slightly faster learned from community
+    return freq(cap, build(puzzle_input)[-1])
 
 @slow
 def solve(puzzle_input):
