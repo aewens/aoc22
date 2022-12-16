@@ -1,5 +1,6 @@
 from pprint import pprint
 from time import sleep
+from heapq import heappush, heappop
 
 def build(puzzle_input):
     flows = dict()
@@ -21,59 +22,86 @@ def build(puzzle_input):
 
     return flows, tunnels
 
-def step(pointer, valves, flows, tunnels, prev=None, clock=30, pressure=0):
+def resolve(pointer, targets, tunnels):
+    seen = dict()
+    seen[pointer] = True
+
+    options = dict()
+
+    points = [([], pointer)]
+    while len(points) > 0:
+        path, valve = heappop(points)
+        for tunnel in tunnels[valve]:
+            route = [*path, valve]
+            size = len(route)
+
+            if targets.get(tunnel):
+                routes = options[tunnel] = options.get(tunnel, list())
+                count = len(routes)
+                cap = None if count == 0 else len(routes[0])
+
+                if cap is not None and size < cap:
+                    for r in range(count):
+                        if len(routes[r]) > size:
+                            routes.pop(r)
+
+                if cap is None or size <= cap:
+                    routes.append(route)
+
+            if seen.get(tunnel):
+                continue
+
+            seen[tunnel] = True
+            heappush(points, (route, tunnel))
+
+    return options
+
+def step(
+    pointer,
+    flows,
+    tunnels,
+    opened=None,
+    clock=30,
+    pressure=0
+):
     if clock < 2:
         return pressure
 
-    remain = [k for k, v in flows.items() if v > 0 and not valves[k]]
-    if len(remain) == 0:
+    if opened is None:
+        opened = {k: False for k in flows.keys()}
+
+    targets = {k: v for k, v in flows.items() if v > 0 and not opened[k]}
+    if len(targets) == 0:
         return pressure
 
-    routes = tunnels[pointer]
-
-    skip = None
-    if len(routes) > 1 and prev and prev in routes:
-        skip = prev
-
     winner = 0
-    static = flows, tunnels, pointer
-    for route in routes:
-        if route == skip:
-            continue
+    static = flows, tunnels
 
-        opened = valves[route]
-        flow = flows[route]
-        result = None
-        display = None
-        if flow == 0 or opened:
-            suffix = *static, clock-1, pressure
-            result = step(route, valves, *suffix)
+    options = resolve(pointer, targets, tunnels)
+    #print(pointer, clock, pressure, len(targets))
+    #pprint(options)
+    for valve, routes in options.items():
+        flow = flows[valve]
+        for route in routes:
+            ticks = len(route)+1
+            result = pressure
+            if ticks <= clock:
+                altered = {**opened}
+                altered[valve] = True
 
-        else:
-            altered = {**valves}
-            altered[route] = True
+                change = (clock-ticks) * flow
+                suffix = *static, altered, clock-ticks, pressure+change
+                result = step(valve, *suffix)
 
-            change = (clock-2) * flow
-            suffix = *static, clock-2, pressure+change
-            left = step(route, altered, *suffix)
-
-            suffix = *static, clock-1, pressure
-            right = step(route, valves, *suffix)
-
-            result = left if left > right else right
-
-        if result is None:
-            continue
-
-        if result > winner:
-            winner = result
+            if result > winner:
+                winner = result
 
     return winner
 
 def p1(puzzle_input):
     flows, tunnels = build(puzzle_input)
-    valves = {k: False for k in flows.keys()}
-    result = step("AA", valves, flows, tunnels)
+    result = step("AA", flows, tunnels)
+    return result
 
 def p2(puzzle_input):
     return None
