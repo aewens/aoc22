@@ -20,9 +20,8 @@ def test_d16():
 
     p1 = script("p1")
     s1 = p1(puzzle)
-    # NOTE - Works, but SLOW!!
     assert s1 == 1651, f"p1 is wrong: {s1}"
 
-    #p2 = script("p2")
-    #s2 = p2(puzzle)
-    #assert s2 == 1707, f"p2 is wrong: {s2}"
+    p2 = script("p2")
+    s2 = p2(puzzle)
+    assert s2 == 1707, f"p2 is wrong: {s2}"
